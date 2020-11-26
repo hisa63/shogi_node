@@ -18,19 +18,19 @@ while (1) { // どちらかの王がinActiveになるまで
     const xNumber = Number(words[1])
     const yNumber = Number(words[2])
     errorChecker = game.board.pieces[pieceNumber].moveTo([xNumber, yNumber])
-    if (errorChecker == 1) {  
+    if (errorChecker === 1) {  
       console.log('')
       console.log('****************************************************************')
       console.log('error : ----- 将棋盤のエリア内で指定してください -----')
-    } else if (errorChecker == 2) {
+    } else if (errorChecker === 2) {
       console.log('')
       console.log('****************************************************************')
       console.log('error : ----- 選択中の駒では移動できない場所です -----')
-    } else if (errorChecker == 3) {
+    } else if (errorChecker === 3) {
       console.log('')
       console.log('****************************************************************')
       console.log('error : ----- 進路に障害物があります ------')
-    } else if (errorChecker == 4) {
+    } else if (errorChecker === 4) {
       console.log('')
       console.log('****************************************************************')
       console.log('error : ----- 指定場所に自身の駒がいます -----')
