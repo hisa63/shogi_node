@@ -5,8 +5,10 @@ const game = new Game()
 game.initGame()
 
 let turn = 1
+let errorChecker = 0
 while (1) { // どちらかの王がinActiveになるまで
   game.print()
+
   console.log('Turn :', turn)
   const prompt = require('prompt-sync')();
   const n = prompt('どのコマを動かしますか？ ex) pieceNumber yPosition xPosition: ') as string;
@@ -15,15 +17,32 @@ while (1) { // どちらかの王がinActiveになるまで
     const pieceNumber = Number(words[0])
     const xNumber = Number(words[1])
     const yNumber = Number(words[2])
-    game.board.pieces[pieceNumber].moveTo([xNumber, yNumber])
-    turn++;
+    errorChecker = game.board.pieces[pieceNumber].moveTo([xNumber, yNumber])
+    if (errorChecker == 1) {  
+      console.log('')
+      console.log('****************************************************************')
+      console.log('error : ----- 将棋盤のエリア内で指定してください -----')
+    } else if (errorChecker == 2) {
+      console.log('')
+      console.log('****************************************************************')
+      console.log('error : ----- 選択中の駒では移動できない場所です -----')
+    } else if (errorChecker == 3) {
+      console.log('')
+      console.log('****************************************************************')
+      console.log('error : ----- 進路に障害物があります ------')
+    } else if (errorChecker == 4) {
+      console.log('')
+      console.log('****************************************************************')
+      console.log('error : ----- 指定場所に自身の駒がいます -----')
+    } else {
+      turn++;
+    }
   } else {
     console.log('')
-    console.log('')
+    console.log('****************************************************************')
     console.log('error : 値を正しく入力してください')
   }
-  console.log('')
-  console.log('')
+  console.log('****************************************************************')
 }
 
 //------------------------------以下、関係なし------------------------------
