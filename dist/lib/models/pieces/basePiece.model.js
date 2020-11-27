@@ -8,101 +8,39 @@ var BasePieceClass = /** @class */ (function () {
         this.board = board;
         this.board.positions[currentPosition[0]][currentPosition[1]] = this;
     }
-    // moveTo(position: number[]): void {
-    //   if (!this.movableTo(position)) throw new Error('you cannot move to that position')
-    //   // set null to my current location (元々いた場所をnullにする)
-    //   this.board.positions[this.currentPosition[0]][this.currentPosition[1]] = null
-    //   // set new location of the board and the piece (新しく配置したpositionにpieceの情報を与える)
-    //   this.board.positions[position[0]][position[1]] = this
-    //   this.currentPosition = position
-    //   // remove the enemy piece if killed (相手のコマを奪った場合、そのコマをinActiveにする)
-    // }
-    // movableTo(position: number[]): boolean {
-    //   let isMove = true
-    //   // can I move to the new position? (指定のpositionに移動できるか？) 
-    //   // is the new position within the shogi board? (指定場所は将棋盤の中で指定されているか？)
-    //   for (let i = 0; i < this.board.baseBoardPosition.length; i++) {
-    //     if ((position[0] == this.board.baseBoardPosition[i][0]) && (position[1] == this.board.baseBoardPosition[i][1])) {
-    //       isMove = true
-    //       break;
-    //     } else {
-    //       isMove = false
-    //     }
-    //   }
-    //   if (!(isMove)) {
-    //     throw new Error('将棋盤のエリア内で指定してください')
-    //     return false
-    //   }
-    //   // is the location included in canMoveToWithoutObstical? (指定場所は移動可能エリアに含まれているか？)  
-    //   let canMoveTo: number[];
-    //   for (let i = 0; i < this.canMoveToWithoutObstical().length; i++) {
-    //     canMoveTo = [this.currentPosition[0] + this.canMoveToWithoutObstical()[i][0],
-    //       this.currentPosition[1] + this.canMoveToWithoutObstical()[i][1]]
-    //     if ((position[0] == canMoveTo[0]) && (position[1] == canMoveTo[1])) {
-    //       isMove = true
-    //       break;
-    //     } else {
-    //       isMove = false
-    //     }
-    //   }
-    //   if (!(isMove)) {
-    //     throw new Error('選択中の駒では移動できない場所です')
-    //     return false
-    //   }
-    //   // is there any obsticals between current position and the new position (移動する間に障害物はないか？)
-    //   let moveDirection: number[]
-    //   let sumY: number
-    //   let sumX: number
-    //   let absoluteY: number
-    //   let absoluteX: number
-    //   // let distance: number 
-    //   sumY = position[0] - this.currentPosition[0]
-    //   sumX = position[1] - this.currentPosition[1]
-    //   absoluteY = Math.abs(sumY)
-    //   absoluteX = Math.abs(sumX)
-    //   moveDirection = [position[0] - this.currentPosition[0], position[1] - this.currentPosition[1]]
-    //   // distance = Math.sqrt(sumY ** 2 + sumX ** 2) 
-    //   // moveDirection[0] /= distance
-    //   // moveDirection[1] /= distance
-    //   if (moveDirection[0] != 0) {
-    //     moveDirection[0] /= absoluteY
-    //   }
-    //   if (moveDirection[1] != 0) {
-    //     moveDirection[1] /= absoluteX
-    //   }
-    //   if(!(this.checkObsticalBetween(moveDirection, position))) {
-    //     throw new Error('進路に障害物があります')
-    //     return false
-    //   }
-    //   // is the destination null or enemy? (目的地はnullか敵ですか？)
-    //   if (!(this.board.positions[position[0]][position[1]] == null)) {
-    //     const piece = this.board.positions[position[0]][position[1]] as BasePieceClass        
-    //     if (piece.player.isFirstMove === this.player.isFirstMove) {
-    //       isMove = false
-    //     } else {
-    //       isMove = true
-    //     }
-    //   }
-    //   if (!isMove) { throw new Error('指定場所に自身の駒がいます') }
-    //   return isMove
-    // }
-    // -------------------------------------------------------------------------------------------------
     BasePieceClass.prototype.moveTo = function (position) {
-        if (this.movableTo(position) == 1) {
+        if (this.movableTo(position) === 1) {
             return 1; // '将棋盤のエリア内で指定してください'
         }
-        else if (this.movableTo(position) == 2) {
+        else if (this.movableTo(position) === 2) {
             return 2; //  '選択中の駒では移動できない場所です'
         }
-        else if (this.movableTo(position) == 3) {
+        else if (this.movableTo(position) === 3) {
             return 3; // '進路に障害物があります'
         }
-        else if (this.movableTo(position) == 4) {
+        else if (this.movableTo(position) === 4) {
             return 4; // '指定場所に自身の駒がいます'
         }
         // set null to my current location (元々いた場所をnullにする)
         this.board.positions[this.currentPosition[0]][this.currentPosition[1]] = null;
         // set new location of the board and the piece (新しく配置したpositionにpieceの情報を与える)
+        //-------------------------------------
+        if (!(this.board.positions[position[0]][position[1]] === null)) {
+            var targetPiece = this.board.positions[position[0]][position[1]];
+            // console.log('操作中のplayer', this.player.isFirstMove)
+            // console.log('before-------\n', targetPiece)
+            // targetPiece.currentPosition = null
+            if (this.player.isFirstMove) {
+                // targetPiece.player.isFirstMove = true // error player2も変更される
+                targetPiece.currentPosition = [9, 9]; //[9, 9] player1 inActive 保管場所
+            }
+            else {
+                // targetPiece.player.isFirstMove = false  // error player2も変更される
+                targetPiece.currentPosition = [10, 10]; //[10, 10] player2 inActive 保管場所
+            }
+            // console.log('after-------\n', targetPiece)
+        }
+        //---------------------------------------
         this.board.positions[position[0]][position[1]] = this;
         this.currentPosition = position;
         // remove the enemy piece if killed (相手のコマを奪った場合、そのコマをinActiveにする)
@@ -129,8 +67,14 @@ var BasePieceClass = /** @class */ (function () {
         // is the location included in canMoveToWithoutObstical? (指定場所は移動可能エリアに含まれているか？)  
         var canMoveTo;
         for (var i = 0; i < this.canMoveToWithoutObstical().length; i++) {
-            canMoveTo = [this.currentPosition[0] + this.canMoveToWithoutObstical()[i][0],
-                this.currentPosition[1] + this.canMoveToWithoutObstical()[i][1]];
+            if (this.player.isFirstMove === true) {
+                canMoveTo = [this.currentPosition[0] + this.canMoveToWithoutObstical()[i][0],
+                    this.currentPosition[1] + this.canMoveToWithoutObstical()[i][1]];
+            }
+            else {
+                canMoveTo = [this.currentPosition[0] - this.canMoveToWithoutObstical()[i][0],
+                    this.currentPosition[1] + this.canMoveToWithoutObstical()[i][1]];
+            }
             if ((position[0] == canMoveTo[0]) && (position[1] == canMoveTo[1])) {
                 isMove = true;
                 break;
@@ -184,7 +128,6 @@ var BasePieceClass = /** @class */ (function () {
         }
         return errorNumber;
     };
-    // -------------------------------------------------------------------------------------------------
     BasePieceClass.prototype.printPiece = function () {
         return '';
     };
@@ -290,4 +233,83 @@ exports.BasePieceClass = BasePieceClass;
 //   }
 // }
 // export default Animal
+// -------------------------------------------------------------------------------------------------
+// moveTo(position: number[]): void {
+//   if (!this.movableTo(position)) throw new Error('you cannot move to that position')
+//   // set null to my current location (元々いた場所をnullにする)
+//   this.board.positions[this.currentPosition[0]][this.currentPosition[1]] = null
+//   // set new location of the board and the piece (新しく配置したpositionにpieceの情報を与える)
+//   this.board.positions[position[0]][position[1]] = this
+//   this.currentPosition = position
+//   // remove the enemy piece if killed (相手のコマを奪った場合、そのコマをinActiveにする)
+// }
+// movableTo(position: number[]): boolean {
+//   let isMove = true
+//   // can I move to the new position? (指定のpositionに移動できるか？) 
+//   // is the new position within the shogi board? (指定場所は将棋盤の中で指定されているか？)
+//   for (let i = 0; i < this.board.baseBoardPosition.length; i++) {
+//     if ((position[0] == this.board.baseBoardPosition[i][0]) && (position[1] == this.board.baseBoardPosition[i][1])) {
+//       isMove = true
+//       break;
+//     } else {
+//       isMove = false
+//     }
+//   }
+//   if (!(isMove)) {
+//     throw new Error('将棋盤のエリア内で指定してください')
+//     return false
+//   }
+//   // is the location included in canMoveToWithoutObstical? (指定場所は移動可能エリアに含まれているか？)  
+//   let canMoveTo: number[];
+//   for (let i = 0; i < this.canMoveToWithoutObstical().length; i++) {
+//     canMoveTo = [this.currentPosition[0] + this.canMoveToWithoutObstical()[i][0],
+//       this.currentPosition[1] + this.canMoveToWithoutObstical()[i][1]]
+//     if ((position[0] == canMoveTo[0]) && (position[1] == canMoveTo[1])) {
+//       isMove = true
+//       break;
+//     } else {
+//       isMove = false
+//     }
+//   }
+//   if (!(isMove)) {
+//     throw new Error('選択中の駒では移動できない場所です')
+//     return false
+//   }
+//   // is there any obsticals between current position and the new position (移動する間に障害物はないか？)
+//   let moveDirection: number[]
+//   let sumY: number
+//   let sumX: number
+//   let absoluteY: number
+//   let absoluteX: number
+//   // let distance: number 
+//   sumY = position[0] - this.currentPosition[0]
+//   sumX = position[1] - this.currentPosition[1]
+//   absoluteY = Math.abs(sumY)
+//   absoluteX = Math.abs(sumX)
+//   moveDirection = [position[0] - this.currentPosition[0], position[1] - this.currentPosition[1]]
+//   // distance = Math.sqrt(sumY ** 2 + sumX ** 2) 
+//   // moveDirection[0] /= distance
+//   // moveDirection[1] /= distance
+//   if (moveDirection[0] != 0) {
+//     moveDirection[0] /= absoluteY
+//   }
+//   if (moveDirection[1] != 0) {
+//     moveDirection[1] /= absoluteX
+//   }
+//   if(!(this.checkObsticalBetween(moveDirection, position))) {
+//     throw new Error('進路に障害物があります')
+//     return false
+//   }
+//   // is the destination null or enemy? (目的地はnullか敵ですか？)
+//   if (!(this.board.positions[position[0]][position[1]] == null)) {
+//     const piece = this.board.positions[position[0]][position[1]] as BasePieceClass        
+//     if (piece.player.isFirstMove === this.player.isFirstMove) {
+//       isMove = false
+//     } else {
+//       isMove = true
+//     }
+//   }
+//   if (!isMove) { throw new Error('指定場所に自身の駒がいます') }
+//   return isMove
+// }
 //# sourceMappingURL=basePiece.model.js.map
