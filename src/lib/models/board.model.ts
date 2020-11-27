@@ -80,8 +80,8 @@ export class Board {
     for (let i = 0; i < 9; i++) {
       this.pieces.push(new Hu(this.player2, [2, i], this))      
     }
-    this.pieces.push(new Kaku(this.player2, [1, 7], this))
     this.pieces.push(new Hisya(this.player2, [1, 1], this))
+    this.pieces.push(new Kaku(this.player2, [1, 7], this))
     this.pieces.push(new Kyosya(this.player2, [0, 0], this))
     this.pieces.push(new Keima(this.player2, [0, 1], this))
     this.pieces.push(new Gin(this.player2, [0, 2], this))

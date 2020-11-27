@@ -69,8 +69,8 @@ var Board = /** @class */ (function () {
         for (var i = 0; i < 9; i++) {
             this.pieces.push(new hu_model_1.Hu(this.player2, [2, i], this));
         }
-        this.pieces.push(new kaku_model_1.Kaku(this.player2, [1, 7], this));
         this.pieces.push(new hisya_model_1.Hisya(this.player2, [1, 1], this));
+        this.pieces.push(new kaku_model_1.Kaku(this.player2, [1, 7], this));
         this.pieces.push(new kyosya_model_1.Kyosya(this.player2, [0, 0], this));
         this.pieces.push(new keima_model_1.Keima(this.player2, [0, 1], this));
         this.pieces.push(new gin_model_1.Gin(this.player2, [0, 2], this));

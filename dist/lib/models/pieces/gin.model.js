@@ -25,8 +25,8 @@ var Gin = /** @class */ (function (_super) {
     };
     Gin.prototype.canMoveToWithoutObstical = function () {
         return [
-            [-1, 1], [0, 1], [1, 1],
-            [-1, -1], [-1, 1]
+            [-1, -1], [-1, 0], [-1, 1],
+            [1, -1], [1, 1]
         ];
     };
     return Gin;

@@ -24,7 +24,7 @@ var Keima = /** @class */ (function (_super) {
         return '桂';
     };
     Keima.prototype.canMoveToWithoutObstical = function () {
-        return [[-1, 2], [1, 2]];
+        return [[-2, 1], [-2, -1]];
     };
     return Keima;
 }(basePiece_model_1.BasePieceClass));
