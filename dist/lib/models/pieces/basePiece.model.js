@@ -24,17 +24,9 @@ var BasePieceClass = /** @class */ (function () {
         // set null to my current location (元々いた場所をnullにする)
         this.board.positions[this.currentPosition[0]][this.currentPosition[1]] = null;
         // set new location of the board and the piece (新しく配置したpositionにpieceの情報を与える)
-        //-------------------------------------
         if (!(this.board.positions[position[0]][position[1]] === null)) {
             var targetPiece = this.board.positions[position[0]][position[1]];
-            // console.log('操作中のplayer', this.player.isFirstMove)
-            console.log('before-------\n', targetPiece);
-            // targetPiece.currentPosition = null
-            // console.log('this :', this.player)
-            // console.log('this :', this.board.positions[position[0]][position[1]])
-            // console.log('board',targetPiece.board.player1)
-            // targetPiece.player.isFirstMove = true;
-            // console.log(targetPiece)
+            // console.log('before-------\n', targetPiece)
             if (this.player.isFirstMove) {
                 targetPiece.player = this.player; // why?
                 // targetPiece.player.isFirstMove = true  //why?
@@ -45,11 +37,16 @@ var BasePieceClass = /** @class */ (function () {
                 // targetPiece.player.isFirstMove = false // why?
                 targetPiece.currentPosition = [10, 10]; //[10, 10] player2 inActive 保管場所
             }
-            console.log('after-------\n', targetPiece);
+            // console.log('after-------\n', targetPiece)
         }
-        //---------------------------------------
         this.board.positions[position[0]][position[1]] = this;
         this.currentPosition = position;
+        if ((this.board.pieces[35].currentPosition[0] === 9) && (this.board.pieces[35].currentPosition[1] === 9)) {
+            return 9;
+        }
+        else if ((this.board.pieces[4].currentPosition[0] === 10) && (this.board.pieces[4].currentPosition[1] === 10)) {
+            return 10;
+        }
         // remove the enemy piece if killed (相手のコマを奪った場合、そのコマをinActiveにする)
         return 0;
     };
