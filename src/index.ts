@@ -4,9 +4,10 @@ import { BasePieceClass } from './lib/models/pieces/basePiece.model'
 const game = new Game()
 game.initGame()
 
+let isGame = true
 let turn = 1
-let errorChecker = 0
-while (1) { // どちらかの王がinActiveになるまで
+let gameChecker = 0
+while (isGame) { // どちらかの王がinActiveになるまで
   game.print()
 
   console.log('Turn :', turn)
@@ -17,23 +18,43 @@ while (1) { // どちらかの王がinActiveになるまで
     const pieceNumber = Number(words[0])
     const xNumber = Number(words[1])
     const yNumber = Number(words[2])
-    errorChecker = game.board.pieces[pieceNumber].moveTo([xNumber, yNumber])
-    if (errorChecker === 1) {  
+    gameChecker = game.board.pieces[pieceNumber].moveTo([xNumber, yNumber])
+    if (gameChecker === 1) {  
       console.log('')
       console.log('****************************************************************')
       console.log('error : ----- 将棋盤のエリア内で指定してください -----')
-    } else if (errorChecker === 2) {
+    } else if (gameChecker === 2) {
       console.log('')
       console.log('****************************************************************')
       console.log('error : ----- 選択中の駒では移動できない場所です -----')
-    } else if (errorChecker === 3) {
+    } else if (gameChecker === 3) {
       console.log('')
       console.log('****************************************************************')
       console.log('error : ----- 進路に障害物があります ------')
-    } else if (errorChecker === 4) {
+    } else if (gameChecker === 4) {
       console.log('')
       console.log('****************************************************************')
       console.log('error : ----- 指定場所に自身の駒がいます -----')
+    } else if (gameChecker === 9) { //player2 Ouを失ったら
+      isGame = false
+      console.log('')
+      console.log('****************************************************************')
+      console.log('')
+      console.log('')
+      console.log('')
+      console.log('------   win : player1   -----')
+      console.log('')
+      console.log('')
+    } else if (gameChecker === 10) {  //player1 Ouを失ったら
+      isGame = false
+      console.log('')
+      console.log('****************************************************************')
+      console.log('')
+      console.log('')
+      console.log('')
+      console.log('------   win : player2   -----')
+      console.log('')
+      console.log('')
     } else {
       turn++;
     }
