@@ -5,12 +5,18 @@ const game = new Game()
 game.initGame()
 
 let isGame = true
+let myTurn: number //  1:player1, -1:player2
 let turn = 1
 let gameChecker = 0
 while (isGame) { // どちらかの王がinActiveになるまで
   game.print()
 
-  console.log('Turn :', turn)
+  myTurn = turn % 2
+  if (myTurn === 0) {
+    console.log('Turn :', turn + '   ( ---  player2  --- )')
+  } else {
+    console.log('Turn :', turn + '   ( ---  player1  --- )')
+  }
   const prompt = require('prompt-sync')();
   const n = prompt('どのコマを動かしますか？ ex) pieceNumber yPosition xPosition: ') as string;
   const words = n.split(' ')
@@ -18,45 +24,52 @@ while (isGame) { // どちらかの王がinActiveになるまで
     const pieceNumber = Number(words[0])
     const xNumber = Number(words[1])
     const yNumber = Number(words[2])
-    gameChecker = game.board.pieces[pieceNumber].moveTo([xNumber, yNumber])
-    if (gameChecker === 1) {  
-      console.log('')
-      console.log('****************************************************************')
-      console.log('error : ----- 将棋盤のエリア内で指定してください -----')
-    } else if (gameChecker === 2) {
-      console.log('')
-      console.log('****************************************************************')
-      console.log('error : ----- 選択中の駒では移動できない場所です -----')
-    } else if (gameChecker === 3) {
-      console.log('')
-      console.log('****************************************************************')
-      console.log('error : ----- 進路に障害物があります ------')
-    } else if (gameChecker === 4) {
-      console.log('')
-      console.log('****************************************************************')
-      console.log('error : ----- 指定場所に自身の駒がいます -----')
-    } else if (gameChecker === 9) { //player2 Ouを失ったら
-      isGame = false
-      console.log('')
-      console.log('****************************************************************')
-      console.log('')
-      console.log('')
-      console.log('')
-      console.log('------   win : player1   -----')
-      console.log('')
-      console.log('')
-    } else if (gameChecker === 10) {  //player1 Ouを失ったら
-      isGame = false
-      console.log('')
-      console.log('****************************************************************')
-      console.log('')
-      console.log('')
-      console.log('')
-      console.log('------   win : player2   -----')
-      console.log('')
-      console.log('')
+    if ((game.board.pieces[pieceNumber].player.isFirstMove) && (myTurn !== 0) ||
+      (!game.board.pieces[pieceNumber].player.isFirstMove) && (myTurn === 0)) {
+      gameChecker = game.board.pieces[pieceNumber].moveTo([xNumber, yNumber])
+      if (gameChecker === 1) {  
+        console.log('')
+        console.log('****************************************************************')
+        console.log('error : ----- 将棋盤のエリア内で指定してください -----')
+      } else if (gameChecker === 2) {
+        console.log('')
+        console.log('****************************************************************')
+        console.log('error : ----- 選択中の駒では移動できない場所です -----')
+      } else if (gameChecker === 3) {
+        console.log('')
+        console.log('****************************************************************')
+        console.log('error : ----- 進路に障害物があります ------')
+      } else if (gameChecker === 4) {
+        console.log('')
+        console.log('****************************************************************')
+        console.log('error : ----- 指定場所に自身の駒がいます -----')
+      } else if (gameChecker === 9) { //player2 Ouを失ったら
+        isGame = false
+        console.log('')
+        console.log('****************************************************************')
+        console.log('')
+        console.log('')
+        console.log('')
+        console.log('------   win : player1   -----')
+        console.log('')
+        console.log('')
+      } else if (gameChecker === 10) {  //player1 Ouを失ったら
+        isGame = false
+        console.log('')
+        console.log('****************************************************************')
+        console.log('')
+        console.log('')
+        console.log('')
+        console.log('------   win : player2   -----')
+        console.log('')
+        console.log('')
+      } else {
+        turn++;
+      }
     } else {
-      turn++;
+      console.log('')
+      console.log('****************************************************************')
+      console.log('指定された駒は相手プレイヤーの駒です')
     }
   } else {
     console.log('')
