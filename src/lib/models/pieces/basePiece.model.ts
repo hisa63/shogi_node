@@ -33,16 +33,23 @@ export class BasePieceClass {
     if (!(this.board.positions[position[0]][position[1]] === null )) {
       const targetPiece = this.board.positions[position[0]][position[1]] as BasePieceClass
       // console.log('操作中のplayer', this.player.isFirstMove)
-      // console.log('before-------\n', targetPiece)
+      console.log('before-------\n', targetPiece)
       // targetPiece.currentPosition = null
+      // console.log('this :', this.player)
+      // console.log('this :', this.board.positions[position[0]][position[1]])
+      // console.log('board',targetPiece.board.player1)
+      // targetPiece.player.isFirstMove = true;
+      // console.log(targetPiece)
       if (this.player.isFirstMove) {
-        // targetPiece.player.isFirstMove = true // error player2も変更される
+        targetPiece.player = this.player // why?
+        // targetPiece.player.isFirstMove = true  //why?
         targetPiece.currentPosition = [9, 9] //[9, 9] player1 inActive 保管場所
       } else {
-        // targetPiece.player.isFirstMove = false  // error player2も変更される
+        targetPiece.player = this.player  // why?
+        // targetPiece.player.isFirstMove = false // why?
         targetPiece.currentPosition = [10, 10] //[10, 10] player2 inActive 保管場所
       }
-      // console.log('after-------\n', targetPiece)
+      console.log('after-------\n', targetPiece)
     }
     //---------------------------------------
     this.board.positions[position[0]][position[1]] = this

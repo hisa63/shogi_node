@@ -6,6 +6,6 @@ export class Keima extends BasePieceClass {
   }
 
   public canMoveToWithoutObstical () {
-    return [[-1, 2], [1, 2]]
+    return [[-2, 1], [-2, -1]]
   }
 }
