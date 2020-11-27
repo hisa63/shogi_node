@@ -7,7 +7,6 @@ var BasePieceClass = /** @class */ (function () {
         this.currentPosition = currentPosition;
         this.board = board;
         this.board.positions[currentPosition[0]][currentPosition[1]] = this;
-        this.active = true;
     }
     BasePieceClass.prototype.moveTo = function (position) {
         if (this.movableTo(position) === 1) {
@@ -25,6 +24,23 @@ var BasePieceClass = /** @class */ (function () {
         // set null to my current location (元々いた場所をnullにする)
         this.board.positions[this.currentPosition[0]][this.currentPosition[1]] = null;
         // set new location of the board and the piece (新しく配置したpositionにpieceの情報を与える)
+        //-------------------------------------
+        if (!(this.board.positions[position[0]][position[1]] === null)) {
+            var targetPiece = this.board.positions[position[0]][position[1]];
+            // console.log('操作中のplayer', this.player.isFirstMove)
+            // console.log('before-------\n', targetPiece)
+            // targetPiece.currentPosition = null
+            if (this.player.isFirstMove) {
+                // targetPiece.player.isFirstMove = true // error player2も変更される
+                targetPiece.currentPosition = [9, 9]; //[9, 9] player1 inActive 保管場所
+            }
+            else {
+                // targetPiece.player.isFirstMove = false  // error player2も変更される
+                targetPiece.currentPosition = [10, 10]; //[10, 10] player2 inActive 保管場所
+            }
+            // console.log('after-------\n', targetPiece)
+        }
+        //---------------------------------------
         this.board.positions[position[0]][position[1]] = this;
         this.currentPosition = position;
         // remove the enemy piece if killed (相手のコマを奪った場合、そのコマをinActiveにする)
@@ -51,8 +67,14 @@ var BasePieceClass = /** @class */ (function () {
         // is the location included in canMoveToWithoutObstical? (指定場所は移動可能エリアに含まれているか？)  
         var canMoveTo;
         for (var i = 0; i < this.canMoveToWithoutObstical().length; i++) {
-            canMoveTo = [this.currentPosition[0] + this.canMoveToWithoutObstical()[i][0],
-                this.currentPosition[1] + this.canMoveToWithoutObstical()[i][1]];
+            if (this.player.isFirstMove === true) {
+                canMoveTo = [this.currentPosition[0] + this.canMoveToWithoutObstical()[i][0],
+                    this.currentPosition[1] + this.canMoveToWithoutObstical()[i][1]];
+            }
+            else {
+                canMoveTo = [this.currentPosition[0] - this.canMoveToWithoutObstical()[i][0],
+                    this.currentPosition[1] + this.canMoveToWithoutObstical()[i][1]];
+            }
             if ((position[0] == canMoveTo[0]) && (position[1] == canMoveTo[1])) {
                 isMove = true;
                 break;
