@@ -6,22 +6,25 @@ export class BasePieceClass {
   player: Player;
   currentPosition: number[];
   board: Board
+  promotion: boolean
 
   constructor (player: Player, currentPosition: number[], board: Board) {
     this.player = player
     this.currentPosition = currentPosition
     this.board = board
     this.board.positions[currentPosition[0]][currentPosition[1]] = this
+    this.promotion = false
   }
 
   moveTo(position: number[]): number {
-    if (this.movableTo(position) === 1) {  // '将棋盤のエリア内で指定してください'
+    let checkNumbers = this.movableTo(position)
+    if (checkNumbers === 1) {  // '将棋盤のエリア内で指定してください'
       return 1
-    } else if (this.movableTo(position) === 2) {  // '選択中の駒では移動できない場所です'
+    } else if (checkNumbers === 2) {  // '選択中の駒では移動できない場所です'
       return 2
-    } else if (this.movableTo(position) === 3) {  // '進路に障害物があります'
+    } else if (checkNumbers === 3) {  // '進路に障害物があります'
       return 3
-    } else if (this.movableTo(position) === 4) {  // '指定場所に自身の駒がいます'
+    } else if (checkNumbers === 4) {  // '指定場所に自身の駒がいます'
       return 4
     }
 
@@ -36,11 +39,17 @@ export class BasePieceClass {
         targetPiece.currentPosition = [10, 10]  //  [10, 10] player2 inActive 保管場所
       }
     }
+
+    if ((this.player.isFirstMove === true) && (position[0] < 3)) {
+      this.promotion = true
+    } else if ((this.player.isFirstMove === false) && (position[0] > 5)) {
+      this.promotion = true
+    }
     this.board.positions[position[0]][position[1]] = this   // set new location of the board and the piece (新しく配置したpositionにpieceの情報を与える)
     this.currentPosition = position
-    if ((this.board.pieces[35].currentPosition[0] === 9) && (this.board.pieces[35].currentPosition[1] === 9)) {
+    if ((this.board.pieces[35].currentPosition[0] === 9) && (this.board.pieces[35].currentPosition[1] === 9)) {  // player2の王なら
       return 9
-    } else if ((this.board.pieces[4].currentPosition[0] === 10) && (this.board.pieces[4].currentPosition[1] === 10)) {
+    } else if ((this.board.pieces[4].currentPosition[0] === 10) && (this.board.pieces[4].currentPosition[1] === 10)) {  // player1の王なら
       return 10
     }
     return 0
