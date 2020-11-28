@@ -10,7 +10,7 @@ let turn = 1
 let gameChecker = 0
 while (isGame) { // どちらかの王がinActiveになるまで
   game.print()
-
+  
   myTurn = turn % 2
   if (myTurn === 0) {
     console.log('Turn :', turn + '   ( ---  player2  --- )')

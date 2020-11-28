@@ -2,10 +2,16 @@ import {BasePieceClass} from './basePiece.model'
 
 export class Keima extends BasePieceClass {
   public printPiece () {
-    return '桂'
+    if (this.promotion)
+      return '圭'
+    else
+      return '袿'
   }
 
   public canMoveToWithoutObstical () {
-    return [[-2, 1], [-2, -1]]
+    if (this.promotion)
+      return [[-1, -1], [-1, 0], [-1, 1],[0, -1], [1, 0], [0, 1]]
+    else
+      return [[-2, 1], [-2, -1]]
   }
 }

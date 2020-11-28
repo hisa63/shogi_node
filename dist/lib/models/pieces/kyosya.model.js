@@ -21,14 +21,25 @@ var Kyosya = /** @class */ (function (_super) {
         return _super !== null && _super.apply(this, arguments) || this;
     }
     Kyosya.prototype.printPiece = function () {
-        return '香';
+        if (this.promotion)
+            return '香';
+        else
+            return '杏';
     };
     Kyosya.prototype.canMoveToWithoutObstical = function () {
-        return [
-            [-1, 0], [-2, 0], [-3, 0],
-            [-4, 0], [-5, 0], [-6, 0],
-            [-7, 0], [-8, 0]
-        ];
+        if (this.promotion) {
+            return [
+                [-1, -1], [-1, 0], [-1, 1],
+                [0, -1], [1, 0], [0, 1]
+            ];
+        }
+        else {
+            return [
+                [-1, 0], [-2, 0], [-3, 0],
+                [-4, 0], [-5, 0], [-6, 0],
+                [-7, 0], [-8, 0]
+            ];
+        }
     };
     return Kyosya;
 }(basePiece_model_1.BasePieceClass));

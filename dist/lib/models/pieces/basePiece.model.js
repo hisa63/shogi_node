@@ -7,56 +7,55 @@ var BasePieceClass = /** @class */ (function () {
         this.currentPosition = currentPosition;
         this.board = board;
         this.board.positions[currentPosition[0]][currentPosition[1]] = this;
+        this.promotion = false;
     }
     BasePieceClass.prototype.moveTo = function (position) {
-        if (this.movableTo(position) === 1) {
-            return 1; // '将棋盤のエリア内で指定してください'
+        var checkNumbers = this.movableTo(position);
+        if (checkNumbers === 1) { // '将棋盤のエリア内で指定してください'
+            return 1;
         }
-        else if (this.movableTo(position) === 2) {
-            return 2; //  '選択中の駒では移動できない場所です'
+        else if (checkNumbers === 2) { // '選択中の駒では移動できない場所です'
+            return 2;
         }
-        else if (this.movableTo(position) === 3) {
-            return 3; // '進路に障害物があります'
+        else if (checkNumbers === 3) { // '進路に障害物があります'
+            return 3;
         }
-        else if (this.movableTo(position) === 4) {
-            return 4; // '指定場所に自身の駒がいます'
+        else if (checkNumbers === 4) { // '指定場所に自身の駒がいます'
+            return 4;
         }
-        // set null to my current location (元々いた場所をnullにする)
-        this.board.positions[this.currentPosition[0]][this.currentPosition[1]] = null;
-        // set new location of the board and the piece (新しく配置したpositionにpieceの情報を与える)
-        if (!(this.board.positions[position[0]][position[1]] === null)) {
+        this.board.positions[this.currentPosition[0]][this.currentPosition[1]] = null; // set null to my current location (元々いた場所をnullにする)
+        if (!(this.board.positions[position[0]][position[1]] === null)) { // remove the enemy piece if killed (相手のコマを奪った場合、そのコマをinActiveにする)
             var targetPiece = this.board.positions[position[0]][position[1]];
-            // console.log('before-------\n', targetPiece)
             if (this.player.isFirstMove) {
-                targetPiece.player = this.player; // why?
-                // targetPiece.player.isFirstMove = true  //why?
+                targetPiece.player = this.player; // why? // targetPiece.player.isFirstMove = true
                 targetPiece.currentPosition = [9, 9]; //[9, 9] player1 inActive 保管場所
             }
             else {
-                targetPiece.player = this.player; // why?
-                // targetPiece.player.isFirstMove = false // why?
-                targetPiece.currentPosition = [10, 10]; //[10, 10] player2 inActive 保管場所
+                targetPiece.player = this.player; // why?  // targetPiece.player.isFirstMove = false
+                targetPiece.currentPosition = [10, 10]; //  [10, 10] player2 inActive 保管場所
             }
-            // console.log('after-------\n', targetPiece)
         }
-        this.board.positions[position[0]][position[1]] = this;
+        if ((this.player.isFirstMove === true) && (position[0] < 3)) {
+            this.promotion = true;
+        }
+        else if ((this.player.isFirstMove === false) && (position[0] > 5)) {
+            this.promotion = true;
+        }
+        this.board.positions[position[0]][position[1]] = this; // set new location of the board and the piece (新しく配置したpositionにpieceの情報を与える)
         this.currentPosition = position;
-        if ((this.board.pieces[35].currentPosition[0] === 9) && (this.board.pieces[35].currentPosition[1] === 9)) {
+        if ((this.board.pieces[35].currentPosition[0] === 9) && (this.board.pieces[35].currentPosition[1] === 9)) { // player2の王なら
             return 9;
         }
-        else if ((this.board.pieces[4].currentPosition[0] === 10) && (this.board.pieces[4].currentPosition[1] === 10)) {
+        else if ((this.board.pieces[4].currentPosition[0] === 10) && (this.board.pieces[4].currentPosition[1] === 10)) { // player1の王なら
             return 10;
         }
-        // remove the enemy piece if killed (相手のコマを奪った場合、そのコマをinActiveにする)
         return 0;
     };
     BasePieceClass.prototype.movableTo = function (position) {
         var isMove = true;
         var errorNumber = 0;
-        // can I move to the new position? (指定のpositionに移動できるか？) 
-        // is the new position within the shogi board? (指定場所は将棋盤の中で指定されているか？)
         for (var i = 0; i < this.board.baseBoardPosition.length; i++) {
-            if ((position[0] == this.board.baseBoardPosition[i][0]) && (position[1] == this.board.baseBoardPosition[i][1])) {
+            if ((position[0] == this.board.baseBoardPosition[i][0]) && (position[1] == this.board.baseBoardPosition[i][1])) { // is the new position within the shogi board? (指定場所は将棋盤の中で指定されているか？)
                 isMove = true;
                 break;
             }
@@ -68,8 +67,7 @@ var BasePieceClass = /** @class */ (function () {
             errorNumber = 1;
             return errorNumber; // throw new Error('将棋盤のエリア内で指定してください')
         }
-        // is the location included in canMoveToWithoutObstical? (指定場所は移動可能エリアに含まれているか？)  
-        var canMoveTo;
+        var canMoveTo; // is the location included in canMoveToWithoutObstical? (指定場所は移動可能エリアに含まれているか？)
         for (var i = 0; i < this.canMoveToWithoutObstical().length; i++) {
             if (this.player.isFirstMove === true) {
                 canMoveTo = [this.currentPosition[0] + this.canMoveToWithoutObstical()[i][0],
@@ -91,21 +89,16 @@ var BasePieceClass = /** @class */ (function () {
             errorNumber = 2;
             return errorNumber; // throw new Error('選択中の駒では移動できない場所です')
         }
-        // is there any obsticals between current position and the new position (移動する間に障害物はないか？)
-        var moveDirection;
+        var moveDirection; // is there any obsticals between current position and the new position (移動する間に障害物はないか？)
         var sumY;
         var sumX;
         var absoluteY;
         var absoluteX;
-        // let distance: number 
         sumY = position[0] - this.currentPosition[0];
         sumX = position[1] - this.currentPosition[1];
         absoluteY = Math.abs(sumY);
         absoluteX = Math.abs(sumX);
         moveDirection = [position[0] - this.currentPosition[0], position[1] - this.currentPosition[1]];
-        // distance = Math.sqrt(sumY ** 2 + sumX ** 2) 
-        // moveDirection[0] /= distance
-        // moveDirection[1] /= distance
         if (moveDirection[0] != 0) {
             moveDirection[0] /= absoluteY;
         }
@@ -116,8 +109,7 @@ var BasePieceClass = /** @class */ (function () {
             errorNumber = 3;
             return errorNumber; // throw new Error('進路に障害物があります')
         }
-        // is the destination null or enemy? (目的地はnullか敵ですか？)
-        if (!(this.board.positions[position[0]][position[1]] == null)) {
+        if (!(this.board.positions[position[0]][position[1]] == null)) { // is the destination null or enemy? (目的地はnullか敵ですか？)
             var piece = this.board.positions[position[0]][position[1]];
             if (piece.player.isFirstMove === this.player.isFirstMove) {
                 isMove = false;
