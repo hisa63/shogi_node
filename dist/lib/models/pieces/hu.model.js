@@ -21,10 +21,19 @@ var Hu = /** @class */ (function (_super) {
         return _super !== null && _super.apply(this, arguments) || this;
     }
     Hu.prototype.printPiece = function () {
-        return '歩';
+        if (this.promotion)
+            return 'と';
+        else
+            return '歩';
     };
     Hu.prototype.canMoveToWithoutObstical = function () {
-        return [[-1, 0]];
+        if (this.promotion)
+            return [
+                [-1, -1], [-1, 0], [-1, 1],
+                [0, -1], [1, 0], [0, 1]
+            ];
+        else
+            return [[-1, 0]];
     };
     return Hu;
 }(basePiece_model_1.BasePieceClass));

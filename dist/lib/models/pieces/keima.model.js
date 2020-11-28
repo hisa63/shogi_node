@@ -21,10 +21,16 @@ var Keima = /** @class */ (function (_super) {
         return _super !== null && _super.apply(this, arguments) || this;
     }
     Keima.prototype.printPiece = function () {
-        return '桂';
+        if (this.promotion)
+            return '圭';
+        else
+            return '袿';
     };
     Keima.prototype.canMoveToWithoutObstical = function () {
-        return [[-1, 2], [1, 2]];
+        if (this.promotion)
+            return [[-1, -1], [-1, 0], [-1, 1], [0, -1], [1, 0], [0, 1]];
+        else
+            return [[-2, 1], [-2, -1]];
     };
     return Keima;
 }(basePiece_model_1.BasePieceClass));

@@ -25,8 +25,8 @@ var Kin = /** @class */ (function (_super) {
     };
     Kin.prototype.canMoveToWithoutObstical = function () {
         return [
-            [-1, 1], [0, 1], [1, 1],
-            [-1, 0], [1, 0], [0, -1]
+            [-1, -1], [-1, 0], [-1, 1],
+            [0, -1], [1, 0], [0, 1]
         ];
     };
     return Kin;

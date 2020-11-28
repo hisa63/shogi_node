@@ -21,13 +21,24 @@ var Gin = /** @class */ (function (_super) {
         return _super !== null && _super.apply(this, arguments) || this;
     }
     Gin.prototype.printPiece = function () {
-        return '銀';
+        if (this.promotion)
+            return '全';
+        else
+            return '銀';
     };
     Gin.prototype.canMoveToWithoutObstical = function () {
-        return [
-            [-1, 1], [0, 1], [1, 1],
-            [-1, -1], [-1, 1]
-        ];
+        if (this.promotion) {
+            return [
+                [-1, -1], [-1, 0], [-1, 1],
+                [0, -1], [1, 0], [0, 1]
+            ];
+        }
+        else {
+            return [
+                [-1, -1], [-1, 0], [-1, 1],
+                [1, -1], [1, 1]
+            ];
+        }
     };
     return Gin;
 }(basePiece_model_1.BasePieceClass));

@@ -2,14 +2,24 @@ import {BasePieceClass} from './basePiece.model'
 
 export class Kyosya extends BasePieceClass {
   public printPiece () {
-    return '香'
+    if (this.promotion)
+      return '香'
+    else
+      return '杏'
   }
 
   public canMoveToWithoutObstical () {
-    return [
-      [0, 1], [0, 2], [0, 3],
-      [0, 4], [0, 5], [0, 6],
-      [0, 7], [0, 8]
-    ]
+    if (this.promotion) {
+      return [
+        [-1, -1], [-1, 0], [-1, 1],
+        [0, -1], [1, 0], [0, 1]
+      ]
+    } else {
+      return [
+        [-1, 0], [-2, 0], [-3, 0],
+        [-4, 0], [-5, 0], [-6, 0],
+        [-7, 0], [-8, 0]
+      ]
+    }
   }
 }
